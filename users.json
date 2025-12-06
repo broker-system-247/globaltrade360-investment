@@ -1,0 +1,129 @@
+{
+  "users": [
+    {
+      "id": 1001,
+      "name": "Test User",
+      "email": "test@example.com",
+      "username": "testuser",
+      "password": "Test123!",
+      "phone": "+1234567890",
+      "balance": 1500.00,
+      "totalDeposited": 2000.00,
+      "totalWithdrawn": 500.00,
+      "investments": [
+        {
+          "id": 1,
+          "plan": "Professional",
+          "amount": 1000,
+          "dailyRate": 8.5,
+          "duration": 45,
+          "startDate": "2024-01-15T10:30:00.000Z",
+          "endDate": "2024-03-01T10:30:00.000Z",
+          "active": true,
+          "totalProfit": 425.00
+        }
+      ],
+      "transactions": [
+        {
+          "id": 1,
+          "type": "deposit",
+          "amount": 1000,
+          "currency": "USD",
+          "status": "completed",
+          "date": "2024-01-10T14:20:00.000Z"
+        },
+        {
+          "id": 2,
+          "type": "deposit",
+          "amount": 1000,
+          "currency": "USD",
+          "status": "completed",
+          "date": "2024-01-12T09:15:00.000Z"
+        },
+        {
+          "id": 3,
+          "type": "withdrawal",
+          "amount": 500,
+          "currency": "USD",
+          "status": "completed",
+          "date": "2024-01-20T16:45:00.000Z"
+        }
+      ],
+      "joined": "2024-01-01T08:00:00.000Z",
+      "verified": true,
+      "kycStatus": "approved",
+      "lastLogin": "2024-01-25T10:30:00.000Z"
+    }
+  ],
+  "admin": {
+    "username": "globaltrade360",
+    "password": "myhandwork2025",
+    "email": "stevenlogan362@gmail.com",
+    "fullName": "Steven Logan",
+    "lastLogin": "2024-01-25T09:00:00.000Z"
+  },
+  "cryptoAddresses": {
+    "bitcoin": "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa",
+    "ethereum": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
+    "usdt": "TNS1V6WVLkQRL2VQGP1C7nKFQZ0Gq9Zq1e",
+    "updatedAt": "2024-01-25T08:00:00.000Z",
+    "updatedBy": "admin"
+  },
+  "platformStats": {
+    "totalUsers": 127,
+    "activeUsers": 89,
+    "totalInvestments": 245,
+    "totalVolume": 1250000.00,
+    "totalProfitPaid": 356000.00,
+    "successRate": 98.7
+  },
+  "messages": [
+    {
+      "id": 1,
+      "userId": 1001,
+      "username": "testuser",
+      "message": "How long does withdrawal take?",
+      "response": "Withdrawals are processed within 2-24 hours. For VIP members, it's instant.",
+      "timestamp": "2024-01-24T14:30:00.000Z",
+      "status": "resolved"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "userId": 1001,
+      "type": "investment",
+      "amount": 1000,
+      "currency": "USD",
+      "description": "Professional Plan Investment",
+      "status": "active",
+      "date": "2024-01-15T10:30:00.000Z"
+    }
+  ],
+  "investmentPlans": [
+    {
+      "name": "Basic",
+      "dailyRate": 5,
+      "duration": 30,
+      "minAmount": 100,
+      "maxAmount": 1000,
+      "features": ["Capital Return", "24/7 Support"]
+    },
+    {
+      "name": "Professional",
+      "dailyRate": 8.5,
+      "duration": 45,
+      "minAmount": 1000,
+      "maxAmount": 10000,
+      "features": ["Capital Return", "Priority Support", "AI Signals Access"]
+    },
+    {
+      "name": "VIP",
+      "dailyRate": 12,
+      "duration": 60,
+      "minAmount": 10000,
+      "maxAmount": 100000,
+      "features": ["Capital Return", "Personal Manager", "Advanced AI Tools"]
+    }
+  ]
+}
