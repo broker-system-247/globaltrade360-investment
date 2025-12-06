@@ -6,30 +6,20 @@
     <title>GlobalTrade360 - Crypto & Forex Investment Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <style>
         :root {
             --primary-gold: #FFD700;
             --secondary-gold: #D4AF37;
             --dark-bg: #0a0e17;
             --card-bg: #1a1f2e;
-            --success-green: #00c853;
-            --profit-color: #4CAF50;
-            --loss-color: #f44336;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --profit-green: #00c853;
+            --success-color: #4CAF50;
         }
         
         body {
             background-color: var(--dark-bg);
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
         }
         
         .gold-gradient {
@@ -40,12 +30,8 @@
         
         .nav-bar {
             background: rgba(10, 14, 23, 0.95);
-            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(212, 175, 55, 0.3);
             padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
         }
         
         .logo {
@@ -55,33 +41,8 @@
         }
         
         .hero-section {
-            background: radial-gradient(circle at 30% 20%, rgba(212, 175, 55, 0.15), transparent 50%),
-                        radial-gradient(circle at 70% 80%, rgba(0, 200, 83, 0.1), transparent 50%);
-            padding: 180px 0 100px;
-            position: relative;
-        }
-        
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-        }
-        
-        .profit-badge {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid var(--profit-color);
-            border-radius: 20px;
-            padding: 8px 20px;
-            font-size: 0.9rem;
-            display: inline-block;
-            margin: 5px;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+            background: radial-gradient(circle at 30% 20%, rgba(212, 175, 55, 0.15), transparent 50%);
+            padding: 150px 0 100px;
         }
         
         .investment-card {
@@ -89,20 +50,35 @@
             border-radius: 15px;
             border: 1px solid rgba(255, 215, 0, 0.1);
             padding: 25px;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
             margin-bottom: 20px;
         }
         
         .investment-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
-            border-color: rgba(212, 175, 55, 0.3);
         }
         
         .profit-display {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--profit-color);
+            color: var(--profit-green);
+        }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
+            color: #000;
+            font-weight: 700;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            color: #000;
         }
         
         .crypto-address-box {
@@ -112,7 +88,31 @@
             padding: 15px;
             font-family: monospace;
             word-break: break-all;
-            font-size: 0.9rem;
+        }
+        
+        .page-section {
+            display: none;
+        }
+        
+        .active-section {
+            display: block;
+        }
+        
+        .success-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 10000;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
         
         .testimonial-card {
@@ -128,16 +128,6 @@
             flex-wrap: wrap;
             gap: 30px;
             margin: 40px 0;
-        }
-        
-        .badge-item {
-            text-align: center;
-            opacity: 0.9;
-            transition: opacity 0.3s;
-        }
-        
-        .badge-item:hover {
-            opacity: 1;
         }
         
         .ai-chat-container {
@@ -164,95 +154,23 @@
         .user-message {
             background: rgba(212, 175, 55, 0.2);
             margin-left: auto;
-            border-bottom-right-radius: 5px;
         }
         
         .ai-message {
             background: rgba(26, 31, 46, 0.8);
             margin-right: auto;
-            border-bottom-left-radius: 5px;
-        }
-        
-        .admin-panel {
-            background: rgba(10, 14, 23, 0.98);
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-        
-        .live-ticker {
-            background: linear-gradient(90deg, var(--dark-bg), rgba(26, 31, 46, 0.9));
-            padding: 15px;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-        
-        .ticker-item {
-            display: inline-block;
-            padding: 0 30px;
-            color: #fff;
-            font-weight: 600;
-        }
-        
-        .page-section {
-            display: none;
-        }
-        
-        .active-section {
-            display: block;
-        }
-        
-        .btn-gold {
-            background: linear-gradient(135deg, var(--primary-gold), var(--secondary-gold));
-            color: #000;
-            font-weight: 700;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        .btn-gold:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-            color: #000;
-        }
-        
-        .success-popup {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--profit-color);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            z-index: 10000;
-            animation: slideIn 0.5s ease-out;
-            display: none;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <!-- Live Trading Ticker -->
-    <div class="live-ticker">
-        <div id="tickerContent">
-            <!-- Ticker items will be populated by JavaScript -->
-        </div>
-    </div>
-
     <!-- Navigation -->
-    <nav class="nav-bar">
+    <nav class="nav-bar fixed-top">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">GlobalTrade360</div>
                 <div>
                     <button class="btn btn-outline-warning me-2" onclick="showSection('home')">Home</button>
                     <button class="btn btn-outline-warning me-2" onclick="showSection('invest')">Invest</button>
-                    <button class="btn btn-outline-warning me-2" onclick="showSection('markets')">Markets</button>
                     <button class="btn btn-outline-warning me-2" onclick="showSection('ai-chat')">AI Advisor</button>
                     <button class="btn btn-gold me-2" onclick="showSection('login')" id="loginBtn">Login</button>
                     <button class="btn btn-outline-light" onclick="showSection('register')" id="registerBtn">Register</button>
@@ -261,130 +179,39 @@
         </div>
     </nav>
 
-    <!-- Home/Landing Page -->
-    <section id="home" class="page-section active-section">
-        <div class="hero-section">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-6">
-                        <h1 class="hero-title gold-gradient">Automated Crypto & Forex Trading Platform</h1>
-                        <p class="lead mb-4">Join 50,000+ investors earning daily profits with our AI-powered trading algorithms. Licensed and secure platform with 24/7 monitoring.</p>
-                        
-                        <div class="mb-4">
-                            <span class="profit-badge">+$1,240.50 Profit Today</span>
-                            <span class="profit-badge">152 Successful Withdrawals</span>
-                            <span class="profit-badge">98.7% Success Rate</span>
-                        </div>
-                        
-                        <button class="btn-gold btn-lg me-3" onclick="showSection('register')">Start Earning Now</button>
-                        <button class="btn btn-outline-warning btn-lg" onclick="showSection('invest')">View Plans</button>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="investment-card">
-                            <h4 class="gold-gradient">Live Profit Tracker</h4>
-                            <canvas id="profitChart" height="250"></canvas>
-                            <div class="mt-3">
-                                <h5 class="profit-display">+$<span id="liveProfit">4,892.36</span></h5>
-                                <p class="text-muted">Real-time community profits today</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Home Section -->
+    <section id="home" class="page-section active-section" style="padding-top: 100px;">
+        <div class="container">
+            <div class="hero-section text-center">
+                <h1 class="gold-gradient display-4 mb-4">Automated Crypto & Forex Trading</h1>
+                <p class="lead mb-4">Join thousands earning daily profits with AI-powered trading</p>
+                <button class="btn-gold btn-lg" onclick="showSection('register')">Start Earning Now</button>
             </div>
-        </div>
-
-        <!-- Trust Badges -->
-        <div class="container my-5">
-            <h3 class="text-center mb-4 gold-gradient">Licensed & Regulated Platform</h3>
-            <div class="trust-badges">
-                <div class="badge-item">
-                    <i class="fas fa-shield-alt fa-3x gold-gradient mb-2"></i>
-                    <p>CySEC Licensed</p>
-                </div>
-                <div class="badge-item">
-                    <i class="fas fa-lock fa-3x gold-gradient mb-2"></i>
-                    <p>256-bit SSL Encryption</p>
-                </div>
-                <div class="badge-item">
-                    <i class="fas fa-user-shield fa-3x gold-gradient mb-2"></i>
-                    <p>KYC Verified</p>
-                </div>
-                <div class="badge-item">
-                    <i class="fas fa-globe fa-3x gold-gradient mb-2"></i>
-                    <p>Global Coverage</p>
-                </div>
-                <div class="badge-item">
-                    <i class="fas fa-bolt fa-3x gold-gradient mb-2"></i>
-                    <p>Instant Withdrawals</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Testimonials -->
-        <div class="container my-5">
-            <h3 class="text-center mb-5 gold-gradient">Trusted by Investors Worldwide</h3>
-            <div class="row">
+            
+            <!-- Investment Plans Preview -->
+            <div class="row mt-5">
                 <div class="col-md-4">
-                    <div class="testimonial-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-warning p-3 me-3">
-                                <i class="fas fa-user text-dark"></i>
-                            </div>
-                            <div>
-                                <h5>Michael Rodriguez</h5>
-                                <p class="text-muted">New York, USA</p>
-                            </div>
-                        </div>
-                        <p>"Made $12,450 in my first month. The AI signals are incredibly accurate. Withdrew my profits instantly!"</p>
-                        <div class="text-warning">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
+                    <div class="investment-card text-center">
+                        <h4 class="gold-gradient">BASIC</h4>
+                        <h2>5% Daily</h2>
+                        <p>30 days</p>
+                        <button class="btn-gold" onclick="showSection('invest')">Invest Now</button>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="testimonial-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-warning p-3 me-3">
-                                <i class="fas fa-user text-dark"></i>
-                            </div>
-                            <div>
-                                <h5>Sarah Chen</h5>
-                                <p class="text-muted">Singapore</p>
-                            </div>
-                        </div>
-                        <p>"As a beginner, the automated trading helped me earn consistently. Customer support is excellent!"</p>
-                        <div class="text-warning">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
+                    <div class="investment-card text-center">
+                        <h4 class="gold-gradient">PRO</h4>
+                        <h2>8.5% Daily</h2>
+                        <p>45 days</p>
+                        <button class="btn-gold" onclick="showSection('invest')">Invest Now</button>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="testimonial-card">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="rounded-circle bg-warning p-3 me-3">
-                                <i class="fas fa-user text-dark"></i>
-                            </div>
-                            <div>
-                                <h5>James Wilson</h5>
-                                <p class="text-muted">London, UK</p>
-                            </div>
-                        </div>
-                        <p>"Professional platform with transparent fees. My portfolio has grown 300% in 6 months."</p>
-                        <div class="text-warning">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
+                    <div class="investment-card text-center">
+                        <h4 class="gold-gradient">VIP</h4>
+                        <h2>12% Daily</h2>
+                        <p>60 days</p>
+                        <button class="btn-gold" onclick="showSection('invest')">Invest Now</button>
                     </div>
                 </div>
             </div>
@@ -397,24 +224,12 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="investment-card">
-                        <h3 class="text-center gold-gradient mb-4">Login to Your Account</h3>
+                        <h3 class="text-center gold-gradient mb-4">Login</h3>
                         <form id="loginForm">
-                            <div class="mb-3">
-                                <label class="form-label">Username or Email</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="loginUsername" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password</label>
-                                <input type="password" class="form-control bg-dark text-white border-secondary" id="loginPassword" required>
-                            </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="rememberMe">
-                                <label class="form-check-label">Remember me</label>
-                            </div>
+                            <input type="text" class="form-control mb-3" placeholder="Username or Email" id="loginUsername" required>
+                            <input type="password" class="form-control mb-3" placeholder="Password" id="loginPassword" required>
                             <button type="submit" class="btn-gold w-100">Login</button>
-                            <div class="text-center mt-3">
-                                <a href="#" class="text-warning" onclick="showSection('register')">Don't have an account? Register</a>
-                            </div>
+                            <p class="text-center mt-3">New user? <a href="#" onclick="showSection('register')" class="text-warning">Register here</a></p>
                         </form>
                     </div>
                 </div>
@@ -428,42 +243,24 @@
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <div class="investment-card">
-                        <h3 class="text-center gold-gradient mb-4">Create Your Trading Account</h3>
+                        <h3 class="text-center gold-gradient mb-4">Register</h3>
                         <form id="registerForm">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Full Name</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="regName" required>
+                                    <input type="text" class="form-control" placeholder="Full Name" id="regName" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Email Address</label>
-                                    <input type="email" class="form-control bg-dark text-white border-secondary" id="regEmail" required>
+                                    <input type="email" class="form-control" placeholder="Email" id="regEmail" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Username</label>
-                                    <input type="text" class="form-control bg-dark text-white border-secondary" id="regUsername" required>
+                                    <input type="text" class="form-control" placeholder="Username" id="regUsername" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Phone Number</label>
-                                    <input type="tel" class="form-control bg-dark text-white border-secondary" id="regPhone">
+                                    <input type="password" class="form-control" placeholder="Password" id="regPassword" required>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control bg-dark text-white border-secondary" id="regPassword" required>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Confirm Password</label>
-                                    <input type="password" class="form-control bg-dark text-white border-secondary" id="regConfirmPassword" required>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="termsAgree" required>
-                                <label class="form-check-label">I agree to the Terms & Conditions and Privacy Policy</label>
                             </div>
                             <button type="submit" class="btn-gold w-100">Create Account</button>
-                            <div class="text-center mt-3">
-                                <a href="#" class="text-warning" onclick="showSection('login')">Already have an account? Login</a>
-                            </div>
+                            <p class="text-center mt-3">Already have an account? <a href="#" onclick="showSection('login')" class="text-warning">Login here</a></p>
                         </form>
                     </div>
                 </div>
@@ -471,53 +268,23 @@
         </div>
     </section>
 
-    <!-- User Dashboard -->
-    <section id="dashboard" class="page-section" style="padding-top: 120px;">
+    <!-- Dashboard Section -->
+    <section id="dashboard" class="page-section" style="padding-top: 100px;">
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="gold-gradient">Trading Dashboard</h3>
-                <div>
-                    <span class="me-3">Welcome, <span id="userName">User</span></span>
-                    <button class="btn btn-outline-warning btn-sm me-2" onclick="logout()">Logout</button>
-                </div>
-            </div>
-            
+            <h3 class="gold-gradient">Dashboard</h3>
             <div class="row">
                 <div class="col-md-4">
                     <div class="investment-card">
-                        <h5 class="gold-gradient">Account Balance</h5>
-                        <h2 class="profit-display">$<span id="userBalance">0.00</span></h2>
-                        <p class="text-muted">+$<span id="dailyProfit">0.00</span> profit today</p>
+                        <h5>Balance</h5>
+                        <h2 class="profit-display" id="userBalance">$0.00</h2>
                         <button class="btn-gold w-100 mt-2" onclick="showSection('deposit')">Deposit</button>
                         <button class="btn btn-outline-warning w-100 mt-2" onclick="showSection('withdraw')">Withdraw</button>
                     </div>
                 </div>
-                
                 <div class="col-md-8">
                     <div class="investment-card">
-                        <h5 class="gold-gradient">Active Investments</h5>
-                        <div id="activeInvestments">
-                            <!-- Investments will be populated here -->
-                        </div>
-                        <button class="btn-gold w-100 mt-3" onclick="showSection('invest')">Start New Investment</button>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="row mt-4">
-                <div class="col-md-8">
-                    <div class="investment-card">
-                        <h5 class="gold-gradient">Trading Activity</h5>
-                        <canvas id="tradingChart" height="200"></canvas>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="investment-card">
-                        <h5 class="gold-gradient">Quick Actions</h5>
-                        <button class="btn-gold w-100 mb-2" onclick="showSection('manual-trade')">Manual Trade</button>
-                        <button class="btn btn-outline-warning w-100 mb-2" onclick="showSection('ai-chat')">AI Advisor</button>
-                        <button class="btn btn-outline-warning w-100 mb-2" onclick="showSection('support')">Support</button>
-                        <button class="btn btn-outline-warning w-100" onclick="showTransactionHistory()">Transaction History</button>
+                        <h5>Active Investments</h5>
+                        <div id="investmentsList"></div>
                     </div>
                 </div>
             </div>
@@ -533,226 +300,41 @@
                     <div class="investment-card text-center">
                         <h4 class="gold-gradient">BASIC</h4>
                         <h2>5% Daily</h2>
-                        <p class="text-muted">For 30 days</p>
-                        <hr>
-                        <p><i class="fas fa-check text-success me-2"></i> Minimum: $100</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Maximum: $1,000</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Capital Return</p>
-                        <p><i class="fas fa-check text-success me-2"></i> 24/7 Support</p>
-                        <button class="btn-gold w-100 mt-3" onclick="selectPlan('basic', 100)">Select Plan</button>
+                        <p>For 30 days</p>
+                        <button class="btn-gold w-100" onclick="selectPlan('basic')">Select Plan</button>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="investment-card text-center" style="border-width: 2px; border-color: var(--primary-gold);">
-                        <div class="position-absolute top-0 start-50 translate-middle">
-                            <span class="badge bg-warning text-dark px-3 py-2">POPULAR</span>
-                        </div>
+                    <div class="investment-card text-center">
                         <h4 class="gold-gradient">PROFESSIONAL</h4>
                         <h2>8.5% Daily</h2>
-                        <p class="text-muted">For 45 days</p>
-                        <hr>
-                        <p><i class="fas fa-check text-success me-2"></i> Minimum: $1,000</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Maximum: $10,000</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Capital Return</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Priority Support</p>
-                        <p><i class="fas fa-check text-success me-2"></i> AI Signals Access</p>
-                        <button class="btn-gold w-100 mt-3" onclick="selectPlan('professional', 1000)">Select Plan</button>
+                        <p>For 45 days</p>
+                        <button class="btn-gold w-100" onclick="selectPlan('professional')">Select Plan</button>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="investment-card text-center">
                         <h4 class="gold-gradient">VIP</h4>
                         <h2>12% Daily</h2>
-                        <p class="text-muted">For 60 days</p>
-                        <hr>
-                        <p><i class="fas fa-check text-success me-2"></i> Minimum: $10,000</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Maximum: $100,000</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Capital Return</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Personal Manager</p>
-                        <p><i class="fas fa-check text-success me-2"></i> Advanced AI Tools</p>
-                        <button class="btn-gold w-100 mt-3" onclick="selectPlan('vip', 10000)">Select Plan</button>
+                        <p>For 60 days</p>
+                        <button class="btn-gold w-100" onclick="selectPlan('vip')">Select Plan</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Deposit Section -->
-    <section id="deposit" class="page-section" style="padding-top: 150px;">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="investment-card">
-                        <h3 class="gold-gradient mb-4">Deposit Funds</h3>
-                        <div class="mb-4">
-                            <label class="form-label">Deposit Amount (USD)</label>
-                            <input type="number" class="form-control bg-dark text-white border-secondary" id="depositAmount" min="100" step="10" value="100">
-                        </div>
-                        
-                        <h5 class="gold-gradient mb-3">Select Payment Method</h5>
-                        <div class="row mb-4">
-                            <div class="col-md-6 mb-3">
-                                <div class="crypto-address-box text-center" onclick="selectCrypto('bitcoin')">
-                                    <i class="fab fa-bitcoin fa-2x gold-gradient mb-2"></i>
-                                    <p>Bitcoin (BTC)</p>
-                                    <small class="text-muted" id="btcAddress">1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</small>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="crypto-address-box text-center" onclick="selectCrypto('ethereum')">
-                                    <i class="fab fa-ethereum fa-2x gold-gradient mb-2"></i>
-                                    <p>Ethereum (ETH)</p>
-                                    <small class="text-muted" id="ethAddress">0x742d35Cc6634C0532925a3b844Bc454e4438f44e</small>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="crypto-address-box text-center" onclick="selectCrypto('usdt')">
-                                    <i class="fas fa-coins fa-2x gold-gradient mb-2"></i>
-                                    <p>USDT (TRC20)</p>
-                                    <small class="text-muted" id="usdtAddress">TNS1V6WVLkQRL2VQGP1C7nKFQZ0Gq9Zq1e</small>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            Send exact amount to the selected address. Deposits will be confirmed after 3 network confirmations.
-                        </div>
-                        
-                        <button class="btn-gold w-100" onclick="processDeposit()">Confirm Deposit</button>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="investment-card">
-                        <h5 class="gold-gradient">Deposit Instructions</h5>
-                        <ol class="mt-3">
-                            <li>Select deposit amount</li>
-                            <li>Choose cryptocurrency</li>
-                            <li>Send exact amount to displayed address</li>
-                            <li>Wait for network confirmation (2-30 minutes)</li>
-                            <li>Funds will be added to your balance automatically</li>
-                        </ol>
-                        <div class="mt-4">
-                            <p class="text-muted">Need help? Contact support:</p>
-                            <p><i class="fas fa-envelope me-2"></i> support@globaltrade360.com</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- AI Chat Section -->
+    <!-- AI Chat -->
     <section id="ai-chat" class="page-section" style="padding-top: 150px;">
         <div class="container">
             <div class="ai-chat-container">
-                <div class="p-3 border-bottom">
-                    <h5 class="gold-gradient m-0"><i class="fas fa-robot me-2"></i>AI Trading Advisor</h5>
-                </div>
                 <div class="chat-messages" id="chatMessages">
-                    <div class="message ai-message">
-                        <strong>AI Advisor:</strong> Hello! I'm your AI trading assistant. I can provide market analysis, trading signals, and investment advice. How can I help you today?
-                    </div>
+                    <div class="message ai-message">Hello! I'm your AI trading advisor. How can I help you?</div>
                 </div>
-                <div class="p-3 border-top">
+                <div class="p-3">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-dark text-white border-secondary" id="chatInput" placeholder="Ask about trading, market conditions, or report an issue...">
-                        <button class="btn-gold" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-muted">AI responses are for informational purposes only. Always do your own research.</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Admin Panel (Hidden until admin login) -->
-    <section id="admin-panel" class="page-section admin-panel">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="gold-gradient"><i class="fas fa-crown me-2"></i>Admin Panel</h2>
-                <button class="btn btn-outline-warning" onclick="adminLogout()">Logout</button>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="list-group">
-                        <button class="list-group-item list-group-item-action bg-dark text-white border-warning" onclick="showAdminTab('dashboard')">
-                            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-                        </button>
-                        <button class="list-group-item list-group-item-action bg-dark text-white border-warning" onclick="showAdminTab('users')">
-                            <i class="fas fa-users me-2"></i>Manage Users
-                        </button>
-                        <button class="list-group-item list-group-item-action bg-dark text-white border-warning" onclick="showAdminTab('crypto')">
-                            <i class="fas fa-coins me-2"></i>Crypto Addresses
-                        </button>
-                        <button class="list-group-item list-group-item-action bg-dark text-white border-warning" onclick="showAdminTab('messages')">
-                            <i class="fas fa-envelope me-2"></i>User Messages
-                        </button>
-                        <button class="list-group-item list-group-item-action bg-dark text-white border-warning" onclick="showAdminTab('broadcast')">
-                            <i class="fas fa-bullhorn me-2"></i>Broadcast Email
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="col-md-9">
-                    <div id="adminDashboard" class="admin-tab">
-                        <h4 class="gold-gradient">Platform Statistics</h4>
-                        <div class="row mt-4">
-                            <div class="col-md-4">
-                                <div class="investment-card">
-                                    <h6>Total Users</h6>
-                                    <h3 id="totalUsers">0</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="investment-card">
-                                    <h6>Active Investments</h6>
-                                    <h3 id="totalInvestments">0</h3>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="investment-card">
-                                    <h6>Total Deposits</h6>
-                                    <h3>$<span id="totalDeposits">0</span></h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="adminCrypto" class="admin-tab" style="display: none;">
-                        <h4 class="gold-gradient">Manage Crypto Addresses</h4>
-                        <div class="investment-card mt-3">
-                            <div class="mb-3">
-                                <label>Bitcoin Deposit Address</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="adminBtcAddress" value="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa">
-                            </div>
-                            <div class="mb-3">
-                                <label>Ethereum Deposit Address</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="adminEthAddress" value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e">
-                            </div>
-                            <div class="mb-3">
-                                <label>USDT (TRC20) Address</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="adminUsdtAddress" value="TNS1V6WVLkQRL2VQGP1C7nKFQZ0Gq9Zq1e">
-                            </div>
-                            <button class="btn-gold" onclick="updateCryptoAddresses()">Update Addresses</button>
-                        </div>
-                    </div>
-                    
-                    <div id="adminBroadcast" class="admin-tab" style="display: none;">
-                        <h4 class="gold-gradient">Broadcast Email to Users</h4>
-                        <div class="investment-card mt-3">
-                            <div class="mb-3">
-                                <label>Subject</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary" id="emailSubject">
-                            </div>
-                            <div class="mb-3">
-                                <label>Message</label>
-                                <textarea class="form-control bg-dark text-white border-secondary" id="emailMessage" rows="5"></textarea>
-                            </div>
-                            <button class="btn-gold" onclick="sendBroadcastEmail()">Send to All Users</button>
-                        </div>
+                        <input type="text" class="form-control" id="chatInput" placeholder="Ask about trading...">
+                        <button class="btn-gold" onclick="sendChatMessage()">Send</button>
                     </div>
                 </div>
             </div>
@@ -760,96 +342,191 @@
     </section>
 
     <!-- Success Popup -->
-    <div class="success-popup" id="successPopup">
-        <i class="fas fa-check-circle me-2"></i>
+    <div class="success-popup" id="successPopup" style="display: none;">
         <span id="popupMessage">Success!</span>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-black text-white py-5 mt-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h4 class="gold-gradient">GlobalTrade360</h4>
-                    <p class="mt-3">Professional automated trading platform with AI-powered investment strategies.</p>
-                    <p><i class="fas fa-envelope me-2"></i> support@globaltrade360.com</p>
-                    <p><i class="fas fa-headset me-2"></i> 24/7 Customer Support</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('home')">Home</a></li>
-                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('invest')">Investment Plans</a></li>
-                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('markets')">Markets</a></li>
-                        <li><a href="#" class="text-white text-decoration-none" onclick="showSection('login')">Login</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Legal</h5>
-                    <p class="small">© 2024 GlobalTrade360. All rights reserved.</p>
-                    <p class="small">Risk Warning: Trading cryptocurrencies and forex carries high risk of loss.</p>
-                    <p class="small">Licensed under CySEC (License No. 123/456)</p>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Global variables
         let currentUser = null;
         let isAdmin = false;
-        let cryptoAddresses = {
-            bitcoin: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
-            ethereum: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e',
-            usdt: 'TNS1V6WVLkQRL2VQGP1C7nKFQZ0Gq9Zq1e'
-        };
-
-        // Initialize platform
+        
+        // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             checkLoginStatus();
-            initializeCharts();
-            startLiveTicker();
-            simulateLiveTrades();
-            showRandomSuccess();
+            simulateLiveUpdates();
+        });
+        
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active-section'));
+            document.getElementById(sectionId).classList.add('active-section');
+        }
+        
+        // Registration
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const userData = {
+                name: document.getElementById('regName').value,
+                email: document.getElementById('regEmail').value,
+                username: document.getElementById('regUsername').value,
+                password: document.getElementById('regPassword').value
+            };
             
-            // Check for admin access in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('admin') === 'true') {
-                showAdminLogin();
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    showSection('dashboard');
+                    updateDashboard();
+                    showPopup('Registration successful! $50 bonus added.');
+                } else {
+                    alert(data.error || 'Registration failed');
+                }
+            } catch (error) {
+                alert('Registration failed. Please try again.');
             }
         });
-
-        // Navigation functions
-        function showSection(sectionId) {
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active-section');
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const credentials = {
+                username: document.getElementById('loginUsername').value,
+                password: document.getElementById('loginPassword').value
+            };
+            
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(credentials)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    isAdmin = data.isAdmin;
+                    localStorage.setItem('currentUser', JSON.stringify(data.user));
+                    localStorage.setItem('isAdmin', data.isAdmin);
+                    
+                    if (data.isAdmin) {
+                        showAdminPanel();
+                    } else {
+                        showSection('dashboard');
+                        updateDashboard();
+                    }
+                    showPopup('Login successful!');
+                } else {
+                    alert(data.error || 'Login failed');
+                }
+            } catch (error) {
+                alert('Login failed. Please try again.');
+            }
+        });
+        
+        // Update dashboard
+        async function updateDashboard() {
+            if (!currentUser) return;
+            
+            try {
+                const response = await fetch(`/api/user/${currentUser.id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('userBalance').textContent = `$${data.user.balance.toFixed(2)}`;
+                    
+                    // Update investments list
+                    const investmentsList = document.getElementById('investmentsList');
+                    if (data.user.investments && data.user.investments.length > 0) {
+                        investmentsList.innerHTML = data.user.investments.map(inv => `
+                            <div class="mb-2 p-3" style="background: rgba(255,255,255,0.05); border-radius: 10px;">
+                                <strong>${inv.plan} Plan</strong><br>
+                                Amount: $${inv.amount} | Daily: $${inv.dailyProfit ? inv.dailyProfit.toFixed(2) : '0.00'}
+                            </div>
+                        `).join('');
+                    } else {
+                        investmentsList.innerHTML = '<p class="text-muted">No active investments</p>';
+                    }
+                }
+            } catch (error) {
+                console.error('Dashboard update error:', error);
+            }
+        }
+        
+        // Investment plans
+        function selectPlan(plan) {
+            if (!currentUser) {
+                showSection('login');
+                showPopup('Please login to invest');
+                return;
+            }
+            
+            const amount = prompt(`Enter amount for ${plan} plan:`);
+            if (!amount) return;
+            
+            fetch('/api/invest', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    plan: plan,
+                    amount: parseFloat(amount)
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    updateDashboard();
+                    showPopup(`Investment created successfully!`);
+                } else {
+                    alert(data.error);
+                }
             });
-            document.getElementById(sectionId).classList.add('active-section');
-            
-            // Update navigation buttons
-            if (sectionId === 'dashboard' && currentUser) {
-                updateDashboard();
-            }
         }
-
-        function showAdminLogin() {
-            const username = prompt("Enter admin username:");
-            const password = prompt("Enter admin password:");
+        
+        // AI Chat
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message || !currentUser) return;
             
-            if (username === 'globaltrade360' && password === 'myhandwork2025') {
-                isAdmin = true;
-                localStorage.setItem('isAdmin', 'true');
-                showSection('admin-panel');
-                updateAdminDashboard();
-                showPopup('Admin login successful!');
-            } else {
-                alert('Invalid admin credentials!');
-                showSection('home');
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `<div class="message user-message">${message}</div>`;
+            
+            try {
+                const response = await fetch('/api/ai-chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        userId: currentUser.id
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    chatMessages.innerHTML += `<div class="message ai-message">${data.response}</div>`;
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
             }
+            
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-
+        
+        // Popup notification
         function showPopup(message) {
             const popup = document.getElementById('successPopup');
             document.getElementById('popupMessage').textContent = message;
@@ -858,558 +535,60 @@
                 popup.style.display = 'none';
             }, 3000);
         }
-
-        // Authentication functions
-        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Check for admin login
-            if (username === 'globaltrade360' && password === 'myhandwork2025') {
-                isAdmin = true;
-                localStorage.setItem('isAdmin', 'true');
-                showSection('admin-panel');
-                updateAdminDashboard();
-                showPopup('Admin login successful!');
-                return;
-            }
-            
-            // Simulate user login
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => (u.username === username || u.email === username) && u.password === password);
-            
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                if (rememberMe) {
-                    localStorage.setItem('rememberedUser', username);
-                }
-                showSection('dashboard');
-                updateDashboard();
-                showPopup('Login successful!');
-            } else {
-                alert('Invalid credentials! Try: user: testuser, pass: Test123!');
-            }
-        });
-
-        document.getElementById('registerForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const userData = {
-                id: Date.now(),
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                username: document.getElementById('regUsername').value,
-                phone: document.getElementById('regPhone').value,
-                password: document.getElementById('regPassword').value,
-                balance: 0,
-                investments: [],
-                joined: new Date().toISOString()
-            };
-            
-            if (userData.password !== document.getElementById('regConfirmPassword').value) {
-                alert('Passwords do not match!');
-                return;
-            }
-            
-            let users = JSON.parse(localStorage.getItem('users') || '[]');
-            if (users.some(u => u.email === userData.email || u.username === userData.username)) {
-                alert('User already exists!');
-                return;
-            }
-            
-            users.push(userData);
-            localStorage.setItem('users', JSON.stringify(users));
-            
-            currentUser = userData;
-            localStorage.setItem('currentUser', JSON.stringify(userData));
-            showSection('dashboard');
-            updateDashboard();
-            showPopup('Registration successful! $50 bonus added to your account!');
-            
-            // Add bonus
-            setTimeout(() => {
-                addBonus(userData.id, 50);
-            }, 1000);
-        });
-
+        
+        // Check login status
         function checkLoginStatus() {
-            const remembered = localStorage.getItem('rememberedUser');
-            const storedUser = localStorage.getItem('currentUser');
-            const storedAdmin = localStorage.getItem('isAdmin');
+            const savedUser = localStorage.getItem('currentUser');
+            const savedAdmin = localStorage.getItem('isAdmin');
             
-            if (storedAdmin === 'true') {
+            if (savedAdmin === 'true') {
+                currentUser = JSON.parse(savedUser);
                 isAdmin = true;
-                showSection('admin-panel');
-                updateAdminDashboard();
-            } else if (storedUser) {
-                currentUser = JSON.parse(storedUser);
+                showAdminPanel();
+            } else if (savedUser) {
+                currentUser = JSON.parse(savedUser);
                 showSection('dashboard');
                 updateDashboard();
-            } else if (remembered) {
-                document.getElementById('loginUsername').value = remembered;
-                document.getElementById('rememberMe').checked = true;
             }
         }
-
+        
+        // Logout
         function logout() {
             currentUser = null;
-            localStorage.removeItem('currentUser');
-            showSection('home');
-            showPopup('Logged out successfully!');
-        }
-
-        function adminLogout() {
             isAdmin = false;
+            localStorage.removeItem('currentUser');
             localStorage.removeItem('isAdmin');
             showSection('home');
-            showPopup('Admin logged out!');
+            showPopup('Logged out successfully');
         }
-
-        // Dashboard functions
-        function updateDashboard() {
-            if (!currentUser) return;
-            
-            document.getElementById('userName').textContent = currentUser.name;
-            
-            // Calculate total balance
-            let totalBalance = currentUser.balance || 0;
-            let dailyProfit = 0;
-            
-            if (currentUser.investments) {
-                currentUser.investments.forEach(inv => {
-                    if (inv.active) {
-                        const daysActive = Math.floor((Date.now() - new Date(inv.startDate)) / (1000 * 60 * 60 * 24));
-                        dailyProfit += inv.amount * (inv.dailyRate / 100);
-                        totalBalance += inv.amount * (inv.dailyRate / 100) * daysActive;
-                    }
-                });
-            }
-            
-            document.getElementById('userBalance').textContent = totalBalance.toFixed(2);
-            document.getElementById('dailyProfit').textContent = dailyProfit.toFixed(2);
-            
-            updateInvestmentsList();
-            updateTradingChart();
-        }
-
-        function updateInvestmentsList() {
-            const container = document.getElementById('activeInvestments');
-            if (!currentUser?.investments?.length) {
-                container.innerHTML = '<p class="text-muted">No active investments</p>';
-                return;
-            }
-            
-            container.innerHTML = currentUser.investments.map(inv => `
-                <div class="d-flex justify-content-between align-items-center p-3 mb-2" style="background: rgba(255,255,255,0.05); border-radius: 10px;">
-                    <div>
-                        <h6 class="mb-1">${inv.plan} Plan</h6>
-                        <small class="text-muted">Started: ${new Date(inv.startDate).toLocaleDateString()}</small>
+        
+        // Admin panel
+        function showAdminPanel() {
+            // For simplicity, redirect to admin interface
+            document.body.innerHTML = `
+                <div class="container mt-5 pt-5">
+                    <h2 class="gold-gradient">Admin Panel</h2>
+                    <div class="investment-card">
+                        <button class="btn-gold" onclick="updateCryptoAddresses()">Update Crypto Addresses</button>
+                        <button class="btn-gold mt-2" onclick="sendBroadcast()">Send Broadcast Email</button>
+                        <button class="btn btn-outline-warning mt-2" onclick="logout()">Logout</button>
                     </div>
-                    <div class="text-end">
-                        <h6 class="text-success">+$${((inv.amount * inv.dailyRate / 100) * Math.floor((Date.now() - new Date(inv.startDate)) / (1000 * 60 * 60 * 24))).toFixed(2)}</h6>
-                        <small>$${inv.amount} @ ${inv.dailyRate}% daily</small>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Investment functions
-        function selectPlan(plan, minAmount) {
-            if (!currentUser) {
-                showSection('login');
-                showPopup('Please login to invest!');
-                return;
-            }
-            
-            const amount = prompt(`Enter investment amount (minimum: $${minAmount}):`);
-            if (!amount || parseFloat(amount) < minAmount) {
-                alert(`Minimum investment is $${minAmount}`);
-                return;
-            }
-            
-            if (parseFloat(amount) > (currentUser.balance || 0)) {
-                showSection('deposit');
-                showPopup('Insufficient balance! Please deposit first.');
-                return;
-            }
-            
-            const dailyRate = plan === 'basic' ? 5 : plan === 'professional' ? 8.5 : 12;
-            const duration = plan === 'basic' ? 30 : plan === 'professional' ? 45 : 60;
-            
-            const investment = {
-                id: Date.now(),
-                plan: plan.charAt(0).toUpperCase() + plan.slice(1),
-                amount: parseFloat(amount),
-                dailyRate: dailyRate,
-                duration: duration,
-                startDate: new Date().toISOString(),
-                active: true
-            };
-            
-            // Update user
-            let users = JSON.parse(localStorage.getItem('users') || '[]');
-            const userIndex = users.findIndex(u => u.id === currentUser.id);
-            
-            if (userIndex !== -1) {
-                if (!users[userIndex].investments) users[userIndex].investments = [];
-                users[userIndex].investments.push(investment);
-                users[userIndex].balance -= parseFloat(amount);
-                localStorage.setItem('users', JSON.stringify(users));
-                currentUser = users[userIndex];
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                showSection('dashboard');
-                updateDashboard();
-                showPopup(`Successfully invested $${amount} in ${plan} plan!`);
-            }
-        }
-
-        function selectCrypto(crypto) {
-            document.querySelectorAll('.crypto-address-box').forEach(box => {
-                box.style.borderColor = '#444';
-            });
-            event.currentTarget.style.borderColor = 'var(--primary-gold)';
-            document.getElementById('selectedCrypto').value = crypto;
-        }
-
-        function processDeposit() {
-            const amount = parseFloat(document.getElementById('depositAmount').value);
-            if (amount < 100) {
-                alert('Minimum deposit is $100');
-                return;
-            }
-            
-            showPopup(`Deposit initiated! Send $${amount} worth of cryptocurrency to the displayed address.`);
-            
-            // Simulate deposit confirmation
-            setTimeout(() => {
-                if (currentUser) {
-                    let users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const userIndex = users.findIndex(u => u.id === currentUser.id);
-                    if (userIndex !== -1) {
-                        users[userIndex].balance += amount;
-                        localStorage.setItem('users', JSON.stringify(users));
-                        currentUser = users[userIndex];
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        
-                        showSection('dashboard');
-                        updateDashboard();
-                        showPopup(`Deposit of $${amount} confirmed! Funds added to your balance.`);
-                    }
-                }
-            }, 5000);
-        }
-
-        // AI Chat functions
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            const chatMessages = document.getElementById('chatMessages');
-            
-            // Add user message
-            chatMessages.innerHTML += `
-                <div class="message user-message">
-                    <strong>You:</strong> ${message}
                 </div>
             `;
-            
-            // AI response
-            setTimeout(() => {
-                let response = '';
-                const lowerMsg = message.toLowerCase();
-                
-                if (lowerMsg.includes('deposit') || lowerMsg.includes('payment')) {
-                    response = `Please use the deposit addresses provided in your dashboard. Current BTC address: ${cryptoAddresses.bitcoin}. Always send the exact amount and wait for network confirmation.`;
-                } else if (lowerMsg.includes('profit') || lowerMsg.includes('earn')) {
-                    response = 'Based on current market analysis, I recommend the Professional plan (8.5% daily). The crypto market is showing bullish signals, making it a good time to invest.';
-                } else if (lowerMsg.includes('bitcoin') || lowerMsg.includes('btc')) {
-                    response = 'BTC is currently in an accumulation phase according to my analysis. Good entry points are between $45,000-$48,000. Expected target: $55,000 in 2 weeks.';
-                } else if (lowerMsg.includes('support') || lowerMsg.includes('help')) {
-                    response = 'For account-related issues, please email support@globaltrade360.com. Your concerns will be forwarded to our support team.';
-                } else if (lowerMsg.includes('withdraw')) {
-                    response = 'Withdrawals are processed within 24 hours. Minimum withdrawal: $50. Make sure your account is KYC verified for faster processing.';
-                } else {
-                    response = 'I recommend considering our automated trading plans for consistent returns. The AI algorithm is currently showing 94.2% accuracy on forex pairs. Would you like specific market analysis?';
-                }
-                
-                chatMessages.innerHTML += `
-                    <div class="message ai-message">
-                        <strong>AI Advisor:</strong> ${response}
-                    </div>
-                `;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
-            
-            input.value = '';
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-
-        // Admin functions
-        function showAdminTab(tabName) {
-            document.querySelectorAll('.admin-tab').forEach(tab => {
-                tab.style.display = 'none';
-            });
-            document.getElementById('admin' + tabName.charAt(0).toUpperCase() + tabName.slice(1)).style.display = 'block';
-        }
-
-        function updateAdminDashboard() {
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            document.getElementById('totalUsers').textContent = users.length;
-            
-            let totalInvestments = 0;
-            let totalDeposits = 0;
-            
-            users.forEach(user => {
-                totalInvestments += (user.investments || []).filter(inv => inv.active).length;
-                totalDeposits += user.balance || 0;
-            });
-            
-            document.getElementById('totalInvestments').textContent = totalInvestments;
-            document.getElementById('totalDeposits').textContent = totalDeposits.toFixed(2);
-            
-            // Load current crypto addresses
-            document.getElementById('adminBtcAddress').value = cryptoAddresses.bitcoin;
-            document.getElementById('adminEthAddress').value = cryptoAddresses.ethereum;
-            document.getElementById('adminUsdtAddress').value = cryptoAddresses.usdt;
-        }
-
-        function updateCryptoAddresses() {
-            cryptoAddresses.bitcoin = document.getElementById('adminBtcAddress').value;
-            cryptoAddresses.ethereum = document.getElementById('adminEthAddress').value;
-            cryptoAddresses.usdt = document.getElementById('adminUsdtAddress').value;
-            
-            // Update display addresses
-            document.getElementById('btcAddress').textContent = cryptoAddresses.bitcoin;
-            document.getElementById('ethAddress').textContent = cryptoAddresses.ethereum;
-            document.getElementById('usdtAddress').textContent = cryptoAddresses.usdt;
-            
-            showPopup('Crypto addresses updated successfully!');
-        }
-
-        function sendBroadcastEmail() {
-            const subject = document.getElementById('emailSubject').value;
-            const message = document.getElementById('emailMessage').value;
-            
-            if (!subject || !message) {
-                alert('Please fill all fields!');
-                return;
-            }
-            
-            showPopup(`Email broadcast sent to all users! Subject: "${subject}"`);
-            
-            // In a real implementation, this would connect to nodemailer
-            document.getElementById('emailSubject').value = '';
-            document.getElementById('emailMessage').value = '';
-        }
-
-        // Live simulation functions
-        function startLiveTicker() {
-            const pairs = [
-                { symbol: 'BTC/USD', price: 45218.50, change: 2.3 },
-                { symbol: 'ETH/USD', price: 2415.75, change: 1.8 },
-                { symbol: 'XRP/USD', price: 0.6245, change: -0.5 },
-                { symbol: 'EUR/USD', price: 1.0850, change: 0.2 },
-                { symbol: 'GBP/USD', price: 1.2650, change: 0.1 },
-                { symbol: 'GOLD', price: 2034.50, change: 0.8 }
-            ];
-            
-            const tickerContent = document.getElementById('tickerContent');
-            
+        
+        // Live updates simulation
+        function simulateLiveUpdates() {
             setInterval(() => {
-                pairs.forEach(pair => {
-                    const change = (Math.random() - 0.5) * 0.5;
-                    pair.price += pair.price * change / 100;
-                    pair.change += change;
-                    pair.price = parseFloat(pair.price.toFixed(2));
-                    pair.change = parseFloat(pair.change.toFixed(2));
-                });
-                
-                tickerContent.innerHTML = pairs.map(pair => `
-                    <div class="ticker-item">
-                        ${pair.symbol} 
-                        <span class="${pair.change >= 0 ? 'text-success' : 'text-danger'}">
-                            $${pair.price.toLocaleString()} (${pair.change >= 0 ? '+' : ''}${pair.change}%)
-                        </span>
-                    </div>
-                `).join('');
-            }, 3000);
-        }
-
-        function simulateLiveTrades() {
-            setInterval(() => {
-                if (currentUser && currentUser.investments) {
-                    // Update profits
-                    let users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const userIndex = users.findIndex(u => u.id === currentUser.id);
-                    
-                    if (userIndex !== -1 && users[userIndex].investments) {
-                        users[userIndex].investments.forEach(inv => {
-                            if (inv.active) {
-                                // Add profit every 30 seconds (simulating real-time)
-                                users[userIndex].balance += inv.amount * (inv.dailyRate / 100) / 2880; // Daily rate divided by 2880 (30-second intervals in a day)
-                            }
-                        });
-                        
-                        localStorage.setItem('users', JSON.stringify(users));
-                        currentUser = users[userIndex];
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        
-                        if (document.getElementById('dashboard').classList.contains('active-section')) {
-                            updateDashboard();
-                        }
-                    }
-                }
-                
-                // Update live profit display
-                const liveProfit = document.getElementById('liveProfit');
-                const current = parseFloat(liveProfit.textContent.replace(/,/g, ''));
-                liveProfit.textContent = (current + Math.random() * 100).toFixed(2);
-            }, 30000); // Every 30 seconds
-        }
-
-        function showRandomSuccess() {
-            const messages = [
-                'James K. just withdrew $2,450.00!',
-                'Sarah M. earned $1,280.50 profit today!',
-                'New investment: Michael T. deposited $5,000!',
-                'VIP member Robert L. reached $25,000 total profit!',
-                'Auto-trade executed: +$342.15 profit on EUR/USD!'
-            ];
-            
-            setInterval(() => {
-                if (Math.random() > 0.7 && document.getElementById('home').classList.contains('active-section')) {
-                    const msg = messages[Math.floor(Math.random() * messages.length)];
-                    showPopup(msg);
-                }
-            }, 10000);
-        }
-
-        // Chart functions
-        function initializeCharts() {
-            // Profit Chart
-            const profitCtx = document.getElementById('profitChart').getContext('2d');
-            new Chart(profitCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Community Profit',
-                        data: [1250, 1890, 2300, 2780, 1890, 2390, 3490],
-                        borderColor: '#FFD700',
-                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#fff' }
-                        },
-                        x: {
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#fff' }
-                        }
-                    }
-                }
-            });
-            
-            // Trading Chart for Dashboard
-            const tradingCtx = document.getElementById('tradingChart').getContext('2d');
-            new Chart(tradingCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                    datasets: [{
-                        label: 'Monthly Profit',
-                        data: [1200, 1900, 1500, 2500, 2200, 3000],
-                        backgroundColor: 'rgba(255, 215, 0, 0.7)',
-                        borderColor: '#FFD700',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#fff' }
-                        },
-                        x: {
-                            grid: { color: 'rgba(255,255,255,0.1)' },
-                            ticks: { color: '#fff' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function updateTradingChart() {
-            // This would update the chart with user's actual data
-        }
-
-        function addBonus(userId, amount) {
-            let users = JSON.parse(localStorage.getItem('users') || '[]');
-            const userIndex = users.findIndex(u => u.id === userId);
-            
-            if (userIndex !== -1) {
-                users[userIndex].balance += amount;
-                localStorage.setItem('users', JSON.stringify(users));
-                
-                if (currentUser && currentUser.id === userId) {
-                    currentUser = users[userIndex];
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                if (currentUser && document.getElementById('dashboard').classList.contains('active-section')) {
                     updateDashboard();
                 }
-            }
+            }, 30000); // Update every 30 seconds
         }
-
-        // Create test user
-        function createTestUser() {
-            const testUser = {
-                id: 1001,
-                name: 'Test User',
-                email: 'test@example.com',
-                username: 'testuser',
-                password: 'Test123!',
-                balance: 1000,
-                investments: [
-                    {
-                        id: 1,
-                        plan: 'Professional',
-                        amount: 500,
-                        dailyRate: 8.5,
-                        duration: 45,
-                        startDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-                        active: true
-                    }
-                ],
-                joined: new Date().toISOString()
-            };
-            
-            let users = JSON.parse(localStorage.getItem('users') || '[]');
-            if (!users.some(u => u.username === 'testuser')) {
-                users.push(testUser);
-                localStorage.setItem('users', JSON.stringify(users));
-                console.log('Test user created! Login with: username: testuser, password: Test123!');
-            }
-        }
-
-        // Initialize test user
-        createTestUser();
+        
+        // Test accounts reminder
+        console.log('🔐 Admin: globaltrade360 / myhandwork2025');
+        console.log('👤 Test User: testuser / Test123!');
     </script>
 </body>
 </html>
